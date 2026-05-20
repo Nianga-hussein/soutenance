@@ -1291,6 +1291,81 @@
         }
 
         /* ============================
+     SHARE SECTION
+  ============================ */
+        #share-section {
+            background: var(--bg);
+            border-top: 0.5px solid var(--border2);
+            padding: 4rem 4rem;
+            text-align: center;
+        }
+
+        .share-title {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text);
+            margin-bottom: 2rem;
+            letter-spacing: -0.03em;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn-share {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.85rem 1.8rem;
+            background: #25D366;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .btn-share:hover {
+            background: #20ba5a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-share.download {
+            background: var(--cyan);
+        }
+
+        .btn-share.download:hover {
+            background: var(--cyan-dark);
+            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+        }
+
+        .share-preview {
+            margin-top: 2rem;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .share-preview img {
+            width: 100%;
+            border-radius: 8px;
+            border: 0.5px solid var(--border2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ============================
      FOOTER
   ============================ */
         footer {
@@ -1969,6 +2044,27 @@
         </div>
     </section>
 
+    <!-- SECTION PARTAGE -->
+    <section id="share-section">
+        <h2 class="share-title reveal">📱 Partager l'Invitation</h2>
+        
+        <div class="share-buttons reveal reveal-delay-1">
+            <button id="whatsapp-share-btn" class="btn-share" aria-label="Partager sur WhatsApp">
+                <span>💬</span> Partager sur WhatsApp
+            </button>
+            <button id="whatsapp-status-btn" class="btn-share" aria-label="Partager sur le statut WhatsApp">
+                <span>✨</span> Ajouter au Statut
+            </button>
+            <a href="invitation.png" download="soutenance-invitation.png" class="btn-share download" aria-label="Télécharger l'invitation">
+                <span>⬇️</span> Télécharger
+            </a>
+        </div>
+
+        <div class="share-preview reveal reveal-delay-2">
+            <img src="invitation.png" alt="Invitation à la soutenance" />
+        </div>
+    </section>
+
     <!-- CTA FINAL -->
     <section id="cta-final">
         <div class="cta-bg" aria-hidden="true"></div>
@@ -2448,6 +2544,50 @@
             }
         }
         setTimeout(typewrite, 2400);
+
+        /* ============================
+           WHATSAPP SHARE FUNCTIONALITY
+        ============================ */
+        const setupShareButtons = () => {
+            const shareUrl = 'https://nianga-hussein.github.io/soutenance/';
+            const shareMessage = ' Vous êtes invité à la soutenance de mémoire : NEXIO\n\n📅 Date : 24 Juin 2026\n🕐 Heure : 08:00 (Brazzaville)\n📍 Lieu : ESGAE\n\n✨ Un ERP de nouvelle génération pour les PME intelligentes.\n\n👉 Plus d\'infos : ' + shareUrl;
+            
+            // Bouton partage WhatsApp direct
+            const whatsappShareBtn = document.getElementById('whatsapp-share-btn');
+            if (whatsappShareBtn) {
+                whatsappShareBtn.addEventListener('click', () => {
+                    const encodedMessage = encodeURIComponent(shareMessage);
+                    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+                    window.open(whatsappUrl, '_blank');
+                });
+            }
+
+            // Bouton partage statut WhatsApp (nécessite l'image)
+            const whatsappStatusBtn = document.getElementById('whatsapp-status-btn');
+            if (whatsappStatusBtn) {
+                whatsappStatusBtn.addEventListener('click', () => {
+                    // Sur mobile, ouvrir WhatsApp avec le message
+                    // Sur desktop, suggestion de télécharger et ajouter manuellement
+                    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                    
+                    if (isMobile) {
+                        // Message pour le statut avec l'image
+                        const statusMessage = encodeURIComponent(' Découvrez NEXIO - ERP de nouvelle génération 🚀\n\n' + shareUrl);
+                        window.open(`https://wa.me/?text=${statusMessage}`, '_blank');
+                    } else {
+                        // Sur desktop, afficher une info
+                        alert(' Pour ajouter à votre statut WhatsApp :\n\n1. Téléchargez l\'invitation\n2. Ouvrez WhatsApp\n3. Allez dans "Statut" → "Mon statut"\n4. Ajoutez l\'image téléchargée\n5. Écrivez le message :\n\n"✨ Soutenance de mémoire : NEXIO\n🎓 ERP de nouvelle génération pour les PME\n📅 24 Juin 2026 à 08:00\n👉 ' + shareUrl + '"');
+                    }
+                });
+            }
+        };
+
+        // Initialiser les boutons de partage
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupShareButtons);
+        } else {
+            setupShareButtons();
+        }
 
         /* ============================
            HERO KINETIC ENTRANCE (CLIP-PATH & DECIPHER)
